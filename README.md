@@ -36,7 +36,35 @@
 ## MCP 工具交互（持续跟进）
 - 新增工具：`generate_and_follow`，入参与 `generate_video` 一致，内部自动轮询并在结构化输出中返回：
   - `task_id`、`final_status`、`video_url`（成功时）
-  - `updates`（数组，记录每次查询的 `status`/`progress`/`video_url` 变化）
+ - `updates`（数组，记录每次查询的 `status`/`progress`/`video_url` 变化）
+
+## 客户端安装配置
+- 运行本地 MCP 服务器（stdio）：
+  - `node mcp-server.js`
+- 在客户端配置（示例）：
+  ```
+  {
+    "mcpServers": {
+      "sora2-mcp": {
+        "command": "node",
+        "args": [
+          "mcp-server.js"
+        ],
+        "env": {
+          "MCP_MODE": "stdio",
+          "API_BASE_URL": "https://api.jxincm.cn",
+          "API_KEY": "<YOUR_API_KEY>",
+          "API_KEY_HEADER": "Authorization",
+          "VIDEO_CREATE_PATH": "/v1/video/create",
+          "TASK_STATUS_PATH": "/v1/videos",
+          "CHARACTER_CREATE_PATH": "/sora/v1/characters",
+          "ASSET_UPLOAD_PATH": "/v1/assets/upload"
+        }
+      }
+    }
+  }
+  ```
+ - 操作：将以上 JSON 复制到客户端的配置文件中，确保已安装 Node 18+，在本仓库目录运行 `node mcp-server.js` 后，客户端即可识别并调用工具。
 
 ## 文档
 - `docs/标准开发文档.md`
