@@ -8,17 +8,49 @@ function sendError(id, code, message) {
   const msg = { jsonrpc: "2.0", id, error: { code, message } }
   stdout.write(JSON.stringify(msg) + "\n")
 }
+function requestJson(method, url, headers, body) {
+  return new Promise((resolve, reject) => {
+    try {
+      const u = new URL(url)
+      const isHttps = u.protocol === "https:"
+      const mod = isHttps ? require("https") : require("http")
+      const opts = {
+        method,
+        hostname: u.hostname,
+        port: u.port || (isHttps ? 443 : 80),
+        path: u.pathname + (u.search || ""),
+        headers
+      }
+      const req = mod.request(opts, (res) => {
+        let data = ""
+        res.on("data", (chunk) => { data += chunk })
+        res.on("end", () => {
+          if (res.statusCode < 200 || res.statusCode >= 300) {
+            return reject(new Error("http " + res.statusCode))
+          }
+          try {
+            const json = data ? JSON.parse(data) : {}
+            resolve(json)
+          } catch (e) {
+            reject(e)
+          }
+        })
+      })
+      req.on("error", reject)
+      if (body) req.write(body)
+      req.end()
+    } catch (e) {
+      reject(e)
+    }
+  })
+}
 async function postJson(url, body, headers) {
   const h = { "Content-Type": "application/json", ...headers }
-  const res = await fetch(url, { method: "POST", headers: h, body: JSON.stringify(body) })
-  if (!res.ok) throw new Error("http " + res.status)
-  return await res.json()
+  return await requestJson("POST", url, h, JSON.stringify(body))
 }
 async function getJson(url, headers) {
   const h = { ...headers }
-  const res = await fetch(url, { method: "GET", headers: h })
-  if (!res.ok) throw new Error("http " + res.status)
-  return await res.json()
+  return await requestJson("GET", url, h, null)
 }
 function authHeaders() {
   const key = env.API_KEY || ""
