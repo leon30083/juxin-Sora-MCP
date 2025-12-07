@@ -205,6 +205,15 @@ stdin.on("data", async (chunk) => {
     try { req = JSON.parse(line) } catch { continue }
     const id = req.id
     const method = req.method
+    if (method === "initialize") {
+      const result = {
+        protocolVersion: "2025-06-18",
+        server: { name: "sora2-mcp", version: "0.1.0", annotations: { title: "Sora 2 MCP" } },
+        capabilities: { tools: {} }
+      }
+      send(id, result)
+      continue
+    }
     if (method === "tools/list") {
       const res = listTools()
       send(id, res)
@@ -217,6 +226,9 @@ stdin.on("data", async (chunk) => {
       } catch (e) {
         sendError(id, -32000, String(e && e.message || e))
       }
+      continue
+    }
+    if (id === undefined) {
       continue
     }
     sendError(id, -32601, "method not found")
