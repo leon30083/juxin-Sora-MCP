@@ -134,6 +134,49 @@ function listTools() {
         required: ["task_id", "final_status"]
       }
     }
+    ,
+    {
+      name: "generate_and_follow_batch",
+      description: "Generate multiple tasks concurrently and follow until video_url",
+      inputSchema: {
+        $schema: "http://json-schema.org/draft-07/schema#",
+        type: "object",
+        properties: {
+          items: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                prompt: { type: "string" },
+                model: { type: "string", enum: ["sora-2", "sora-2-pro"] },
+                duration: { type: "number" },
+                orientation: { type: "string" }
+              },
+              required: ["prompt", "model"]
+            }
+          },
+          concurrency: { type: "number" },
+          poll_interval_seconds: { type: "number" },
+          max_minutes: { type: "number" }
+        },
+        required: ["items"]
+      },
+      outputSchema: {
+        $schema: "http://json-schema.org/draft-07/schema#",
+        type: "object",
+        properties: {
+          results: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: { task_id: { type: "string" }, final_status: { type: "string" }, video_url: { type: "string" } },
+              required: ["task_id", "final_status"]
+            }
+          }
+        },
+        required: ["results"]
+      }
+    }
   ]
   return { tools }
 }
@@ -191,6 +234,51 @@ async function callTool(params) {
     const out = { task_id: taskId, final_status: final, video_url: link }
     return { content: [{ type: "text", text: JSON.stringify(out) }], structuredContent: out }
   }
+  if (name === "generate_and_follow_batch") {
+    const items = Array.isArray(args.items) ? args.items : []
+    const concurrency = typeof args.concurrency === "number" && args.concurrency > 0 ? Math.floor(args.concurrency) : 3
+    const interval = typeof args.poll_interval_seconds === "number" ? args.poll_interval_seconds : 6
+    const maxMinutes = typeof args.max_minutes === "number" ? args.max_minutes : 8
+    const statusBase = base + ep.taskStatus
+    const createBase = base + ep.videoCreate
+    async function runOne(it) {
+      const payload = { model: it.model, prompt: it.prompt, duration: typeof it.duration === "number" ? it.duration : 15, orientation: it.orientation || "landscape" }
+      const created = await postJson(createBase, payload, authHeaders())
+      const taskId = String(created.task_id || created.id || "")
+      const deadline = Date.now() + maxMinutes * 60 * 1000
+      let final = "pending"
+      let link = undefined
+      while (Date.now() < deadline) {
+        const s = await getJson(statusBase + "/" + encodeURIComponent(taskId), authHeaders())
+        if (s.video_url) { final = String(s.status || "succeeded"); link = s.video_url; break }
+        if (String(s.status) === "failed") { final = "failed"; break }
+        await new Promise(r => setTimeout(r, interval * 1000))
+      }
+      return { task_id: taskId, final_status: final, video_url: link }
+    }
+    const queue = items.slice()
+    const running = []
+    const results = []
+    while (running.length < concurrency && queue.length) {
+      const it = queue.shift()
+      running.push(runOne(it).then(res => { results.push(res) }))
+    }
+    while (running.length) {
+      await Promise.race(running)
+      for (let i = running.length - 1; i >= 0; i--) {
+        if (running[i].settled) running.splice(i, 1)
+      }
+      while (running.length < concurrency && queue.length) {
+        const it = queue.shift()
+        const p = runOne(it).then(res => { results.push(res) })
+        running.push(p)
+      }
+      await Promise.all(running)
+      break
+    }
+    const out = { results }
+    return { content: [{ type: "text", text: JSON.stringify(out) }], structuredContent: out }
+  }
   return { content: [{ type: "text", text: JSON.stringify({ isError: true, code: 404, message: "unknown tool" }) }], structuredContent: { isError: true, code: 404, message: "unknown tool" } }
 }
 stdin.setEncoding("utf8")
@@ -207,7 +295,7 @@ stdin.on("data", async (chunk) => {
     const method = req.method
     if (method === "initialize") {
       const result = {
-        protocolVersion: "2025-06-18",
+        protocolVersion: "2025-03-26",
         serverInfo: {
           name: "sora2-mcp",
           version: "0.1.0",
