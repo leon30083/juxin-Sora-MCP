@@ -208,8 +208,12 @@ stdin.on("data", async (chunk) => {
     if (method === "initialize") {
       const result = {
         protocolVersion: "2025-06-18",
-        server: { name: "sora2-mcp", version: "0.1.0", annotations: { title: "Sora 2 MCP" } },
-        capabilities: { tools: {} }
+        serverInfo: {
+          name: "sora2-mcp",
+          version: "0.1.0",
+          annotations: { title: "Sora 2 MCP" }
+        },
+        capabilities: { tools: { listChanged: true } }
       }
       send(id, result)
       continue
