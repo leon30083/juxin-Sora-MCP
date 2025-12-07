@@ -1,0 +1,31 @@
+{
+  "createCharacter.input.ok": {
+    "video_url": "https://example.com/ref.mp4",
+    "name": "actor"
+  },
+  "createCharacter.output.ok": {
+    "character_id": "char_123",
+    "reference_video_url": "https://example.com/ref.mp4"
+  },
+  "generateVideo.input.prompt": {
+    "prompt": "A cat running on the beach",
+    "model": "sora-2",
+    "aspect_ratio": "16:9"
+  },
+  "generateVideo.input.character": {
+    "prompt": "The same actor speaks",
+    "model": "sora-2-pro",
+    "character_id": "char_123"
+  },
+  "generateVideo.output.ok": {
+    "task_id": "task_abc"
+  },
+  "getTaskStatus.input": {
+    "task_id": "task_abc"
+  },
+  "getTaskStatus.output.ok": {
+    "status": "succeeded",
+    "progress": 100,
+    "video_url": "https://cdn.example.com/video.mp4"
+  }
+}

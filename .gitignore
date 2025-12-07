@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+
+# environment
+.env
+
+# OS/IDE
+.DS_Store
+Thumbs.db
+.vscode/
+
+# test artifacts
+tests/last_task_id.txt
+tests/last_video_url.txt
+
+# logs
+*.log
+
+# local user secrets
+开发资料夹-用户存放资料/聚鑫测试用key.md
