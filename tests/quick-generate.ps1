@@ -10,8 +10,8 @@ $headers = @{ Authorization = "Bearer $token"; 'Content-Type' = 'application/jso
 $bodyObj = @{ 
   model = 'sora-2'; 
   prompt = '在海滩上度假的快乐场景。'; 
-  duration = 10; 
-  size = 'small'; 
+  duration = 15; 
+  orientation = 'landscape';
   images = @();
 }
 

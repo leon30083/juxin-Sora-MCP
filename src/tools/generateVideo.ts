@@ -13,6 +13,7 @@ type Input = {
   character_url?: string;
   character_timestamps?: string;
   aspect_ratio?: string;
+  orientation?: string;
   duration?: number;
   resolution?: string;
   seed?: number;
@@ -57,10 +58,13 @@ export async function generateVideoTool(input: Input): Promise<StructuredResult<
       prompt: input.prompt,
       images: normImages,
     };
-    if (typeof input.duration === "number") payload.duration = input.duration;
+    const duration = typeof input.duration === "number" ? input.duration : 15;
+    payload.duration = duration;
     if (typeof input.seed === "number") payload.seed = input.seed;
     if (input.resolution) payload.resolution = input.resolution;
     if (input.negative_prompt) payload.negative_prompt = input.negative_prompt;
+    const orientation = input.orientation || "landscape";
+    payload.orientation = orientation;
     if (characterUrl) payload.character_url = characterUrl;
     if (input.character_timestamps) payload.character_timestamps = input.character_timestamps;
     const resp = await withRetries(() => postJson<any>(endpoint, payload, authHeaders()));

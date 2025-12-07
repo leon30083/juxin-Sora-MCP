@@ -3,7 +3,7 @@
 - 工具：`create_character`、`generate_video`、`get_task_status`
 - 环境变量：`API_BASE_URL`、`API_KEY`
 - 规范：严格遵循 MCP Tools 规范，返回同时包含结构化结果与文本序列化 JSON。
- - 素材：统一通过聚鑫图床归一，支持 URL/Base64 输入，内部自动上传并返回可访问 URL。
+- 素材：统一通过聚鑫图床归一，支持 URL/Base64 输入，内部自动上传并返回可访问 URL。
 
 ## 使用
 - 设置 `API_BASE_URL` 与 `API_KEY`（例如：`API_BASE_URL=https://api.jxincm.cn`）。
@@ -15,6 +15,12 @@
   - `TASK_STATUS_PATH`（默认 `/v1/videos`，用于 OpenAI官方视频格式查询）
   - `ASSET_UPLOAD_PATH`（默认 `/v1/assets/upload`）
 - 通过 MCP 客户端调用对应工具并传入 JSON 参数。
+
+## 默认参数
+- 未指定时，自动补全：
+  - `orientation: landscape`（16:9）
+  - `duration: 15`
+  - 提示词保持原样，不做修改；可选参数由工具补全。
 
 ## 快速验证
 - PowerShell 设置环境变量并发起生成：
