@@ -1,0 +1,26 @@
+{
+  "sequence_id": "Xuanwu-Part2-Entry",
+  "created_at": "2025-12-11T10:45:48.902Z",
+  "tasks": [
+    {
+      "shot_id": "01",
+      "task_id": null,
+      "error": "创建视频失败: No available channels for model veo2-fast in group 限时特价 (request id: )"
+    },
+    {
+      "shot_id": "02",
+      "task_id": null,
+      "error": "创建视频失败: No available channels for model veo2-fast in group 限时特价 (request id: )"
+    },
+    {
+      "shot_id": "03",
+      "task_id": null,
+      "error": "创建视频失败: No available channels for model veo2-fast in group 限时特价 (request id: )"
+    },
+    {
+      "shot_id": "04",
+      "task_id": null,
+      "error": "创建视频失败: No available channels for model veo2-fast in group 限时特价 (request id: )"
+    }
+  ]
+}

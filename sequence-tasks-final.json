@@ -1,0 +1,22 @@
+{
+  "sequence_id": "Xuanwu-Part2-Entry",
+  "created_at": "2025-12-11T10:57:25.816Z",
+  "tasks": [
+    {
+      "shot_id": "01",
+      "task_id": "video_ba3a8df4-896b-490c-a5f2-8f2b9d87c771"
+    },
+    {
+      "shot_id": "02",
+      "task_id": "video_7313a80d-0cda-4658-8689-a050aeb0cc33"
+    },
+    {
+      "shot_id": "03",
+      "task_id": "video_621d3f0e-d61f-47eb-9473-47bc0f1caf98"
+    },
+    {
+      "shot_id": "04",
+      "task_id": "video_31364d26-8ecb-4fcb-8174-7386df9593fb"
+    }
+  ]
+}

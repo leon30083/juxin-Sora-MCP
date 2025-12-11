@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-12-11T10:59:31.790Z",
+  "results": [
+    {
+      "name": "李世民登基",
+      "prompt": "@rsgvoepwj.valor_knig 登基称帝，身穿龙袍，气势恢宏，电影大片感",
+      "success": false,
+      "error": "client.createCharacterVideoChat is not a function"
+    },
+    {
+      "name": "李建成漫步",
+      "prompt": "@fpjhyfzxl.grandvizie 在宫殿花园中漫步，身穿华丽朝服，表情深思",
+      "success": false,
+      "error": "client.createCharacterVideoChat is not a function"
+    },
+    {
+      "name": "李元吉射箭",
+      "prompt": "@jasvwqpvt.hanblueher 在校场练习射箭，英姿飒爽",
+      "success": false,
+      "error": "client.createCharacterVideoChat is not a function"
+    },
+    {
+      "name": "三人并驾",
+      "prompt": "@fpjhyfzxl.grandvizie, @jasvwqpvt.hanblueher, and @rsgvoepwj.valor_knig 三人并驾齐驱，讨论国事",
+      "success": false,
+      "error": "client.createCharacterVideoChat is not a function"
+    }
+  ]
+}

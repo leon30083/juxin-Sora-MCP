@@ -1,0 +1,6 @@
+sk-Q6DwAtsNvutSlaZXYAzXR39pUmwKHAHDgll0QifCL5GbwJd7
+
+角色ID:
+李元吉：jasvwqpvt.hanblueher
+李建成：fpjhyfzxl.grandvizie
+李世民：rsgvoepwj.valor_knig
