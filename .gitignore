@@ -111,3 +111,11 @@ jspm_packages/
 
 # DynamoDB Local files
 .dynamodb/
+
+# Additional items from remote
+# test artifacts
+tests/last_task_id.txt
+tests/last_video_url.txt
+
+# local user secrets
+开发资料夹-用户存放资料/
