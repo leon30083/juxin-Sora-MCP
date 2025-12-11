@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聚鑫 Sora-2 MCP Web界面</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <h1>🎬 聚鑫 Sora-2 视频生成</h1>
+            <div class="stats" id="stats">
+                <div class="stat-item">
+                    <span class="stat-label">总任务</span>
+                    <span class="stat-value" id="totalTasks">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">进行中</span>
+                    <span class="stat-value" id="processingTasks">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">已完成</span>
+                    <span class="stat-value" id="completedTasks">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">成功率</span>
+                    <span class="stat-value" id="successRate">0%</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 创建视频区域 -->
+            <section class="create-section">
+                <h2>创建新视频</h2>
+
+                <div class="tab-container">
+                    <button class="tab-btn active" data-tab="text">文生视频</button>
+                    <button class="tab-btn" data-tab="image">图生视频</button>
+                    <button class="tab-btn" data-tab="character">角色视频</button>
+                </div>
+
+                <!-- 文生视频表单 -->
+                <form class="tab-content active" id="text-form">
+                    <div class="form-group">
+                        <label for="prompt">提示词</label>
+                        <textarea id="prompt" placeholder="描述你想要生成的视频内容..." rows="4"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="orientation">方向</label>
+                            <select id="orientation">
+                                <option value="landscape">横屏 (16:9)</option>
+                                <option value="portrait">竖屏 (9:16)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="size">分辨率</label>
+                            <select id="size">
+                                <option value="small">720p</option>
+                                <option value="large">1080p</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="duration">时长</label>
+                            <select id="duration">
+                                <option value="10">10秒</option>
+                                <option value="15">15秒</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group checkbox-group">
+                            <label>
+                                <input type="checkbox" id="watermark" checked>
+                                无水印
+                            </label>
+                            <label>
+                                <input type="checkbox" id="private" checked>
+                                隐藏视频
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        <span class="btn-icon">🎬</span>
+                        创建视频
+                    </button>
+                </form>
+
+                <!-- 图生视频表单 -->
+                <form class="tab-content" id="image-form">
+                    <div class="form-group">
+                        <label for="imageUpload">上传图片</label>
+                        <div class="upload-area" id="uploadArea">
+                            <input type="file" id="imageUpload" accept="image/*" hidden>
+                            <div class="upload-placeholder">
+                                <span class="upload-icon">📷</span>
+                                <p>点击或拖拽图片到此处</p>
+                                <small>支持 JPG, PNG, GIF 格式，最大 10MB</small>
+                            </div>
+                            <div class="upload-preview" id="uploadPreview" style="display: none;">
+                                <img id="previewImage" src="" alt="预览">
+                                <button type="button" class="btn-remove" id="removeImage">✕</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="imagePrompt">提示词（可选）</label>
+                        <textarea id="imagePrompt" placeholder="描述图片的处理方式..." rows="3"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        <span class="btn-icon">🎬</span>
+                        创建视频
+                    </button>
+                </form>
+
+                <!-- 角色视频表单 -->
+                <form class="tab-content" id="character-form">
+                    <div class="form-group">
+                        <label for="characterSelect">选择角色</label>
+                        <select id="characterSelect">
+                            <option value="">-- 选择已有角色 --</option>
+                            <option value="@fpjhyfzxl.grandvizie">李建成 (@fpjhyfzxl.grandvizie)</option>
+                            <option value="@jasvwqpvt.hanblueher">李元吉 (@jasvwqpvt.hanblueher)</option>
+                            <option value="@rsgvoepwj.valor_knig">李世民 (@rsgvoepwj.valor_knig)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="characterPrompt">提示词</label>
+                        <textarea id="characterPrompt" placeholder="描述角色要执行的动作..." rows="4"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="characterOrientation">方向</label>
+                            <select id="characterOrientation">
+                                <option value="landscape">横屏 (16:9)</option>
+                                <option value="portrait">竖屏 (9:16)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="characterSize">分辨率</label>
+                            <select id="characterSize">
+                                <option value="small">720p</option>
+                                <option value="large">1080p</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        <span class="btn-icon">🎬</span>
+                        创建角色视频
+                    </button>
+                </form>
+            </section>
+
+            <!-- 任务列表区域 -->
+            <section class="tasks-section">
+                <div class="section-header">
+                    <h2>任务列表</h2>
+                    <div class="controls">
+                        <select id="statusFilter">
+                            <option value="all">全部</option>
+                            <option value="pending">等待中</option>
+                            <option value="processing">处理中</option>
+                            <option value="completed">已完成</option>
+                            <option value="failed">失败</option>
+                        </select>
+                        <button class="btn-secondary" id="refreshBtn">
+                            <span class="btn-icon">🔄</span>
+                            刷新
+                        </button>
+                        <button class="btn-secondary" id="batchQueryBtn">
+                            <span class="btn-icon">📊</span>
+                            批量查询
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tasks-container" id="tasksList">
+                    <div class="loading">加载中...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 任务详情弹窗 -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>任务详情</h3>
+                <button class="modal-close" id="modalClose">✕</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 动态内容 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

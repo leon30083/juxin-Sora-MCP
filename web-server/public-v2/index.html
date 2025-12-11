@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聚鑫 Sora-2 视频生成平台</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎬 聚鑫 Sora-2 视频生成平台</h1>
+            <p>使用 AI 技术快速生成高质量视频内容</p>
+        </header>
+
+        <main>
+            <!-- Tab Navigation -->
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="video">视频生成</button>
+                <button class="tab-btn" data-tab="character">角色创建</button>
+                <button class="tab-btn" data-tab="tasks">任务管理</button>
+            </div>
+
+            <!-- Video Generation Tab -->
+            <div class="tab-content active" id="video-tab">
+                <div class="form-section">
+                    <h2>创建视频生成任务</h2>
+                    <form id="video-form">
+                        <div class="form-group">
+                            <label for="video-prompt">视频描述提示词</label>
+                            <textarea id="video-prompt" placeholder="描述你想要创建的视频内容..." required></textarea>
+                            <small class="form-hint">请详细描述视频的场景、动作、风格等</small>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="video-orientation">视频方向</label>
+                                <select id="video-orientation">
+                                    <option value="landscape">横屏 (16:9)</option>
+                                    <option value="portrait">竖屏 (9:16)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="video-size">视频尺寸</label>
+                                <select id="video-size">
+                                    <option value="small">720p (小)</option>
+                                    <option value="large">1080p (大)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="video-watermark">
+                                    添加水印
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="video-private" checked>
+                                    设为私密
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>上传图片（可选）</label>
+                            <div class="file-upload-area" id="file-upload-area">
+                                <input type="file" id="video-images" accept="image/*" multiple>
+                                <div class="file-upload-content">
+                                    <p>📁 点击或拖拽上传图片</p>
+                                    <small>支持 JPG, PNG 格式，最大 10MB</small>
+                                </div>
+                            </div>
+                            <div id="uploaded-images" class="uploaded-images"></div>
+                        </div>
+
+                        <button type="submit" class="btn-primary">
+                            <span class="btn-text">生成视频</span>
+                            <span class="btn-loader" style="display: none;">⏳ 生成中...</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="preview-section" id="video-preview" style="display: none;">
+                    <h3>生成结果</h3>
+                    <div class="video-container">
+                        <video id="generated-video" controls></video>
+                        <a id="download-link" href="#" download class="btn-secondary" style="display: none;">
+                            ⬇️ 下载视频
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Character Creation Tab -->
+            <div class="tab-content" id="character-tab">
+                <div class="form-section">
+                    <h2>创建角色</h2>
+                    <form id="character-form">
+                        <div class="form-group">
+                            <label for="character-prompt">角色描述</label>
+                            <textarea id="character-prompt" placeholder="描述你想要创建的角色..." required></textarea>
+                            <small class="form-hint">描述角色的外观、服装、表情等特征</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="character-style">角色风格</label>
+                            <select id="character-style">
+                                <option value="realistic">写实风格</option>
+                                <option value="cartoon">卡通风格</option>
+                                <option value="anime">动漫风格</option>
+                                <option value="3d">3D风格</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-primary">
+                            <span class="btn-text">创建角色</span>
+                            <span class="btn-loader" style="display: none;">⏳ 创建中...</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="preview-section" id="character-preview" style="display: none;">
+                    <h3>创建结果</h3>
+                    <div class="character-container">
+                        <img id="generated-character" alt="Generated Character">
+                        <a id="download-character" href="#" download class="btn-secondary" style="display: none;">
+                            ⬇️ 下载图片
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks Management Tab -->
+            <div class="tab-content" id="tasks-tab">
+                <div class="tasks-section">
+                    <div class="tasks-header">
+                        <h2>任务管理</h2>
+                        <button id="refresh-tasks" class="btn-secondary">🔄 刷新</button>
+                    </div>
+
+                    <div class="tasks-filters">
+                        <button class="filter-btn active" data-filter="all">全部</button>
+                        <button class="filter-btn" data-filter="pending">等待中</button>
+                        <button class="filter-btn" data-filter="processing">处理中</button>
+                        <button class="filter-btn" data-filter="completed">已完成</button>
+                        <button class="filter-btn" data-filter="failed">失败</button>
+                    </div>
+
+                    <div id="tasks-list" class="tasks-list">
+                        <!-- Tasks will be dynamically loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="connection-status" id="connection-status">
+                🔴 未连接
+            </div>
+            <div class="task-counter">
+                活跃任务: <span id="active-tasks-count">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Modal -->
+    <div class="modal" id="progress-modal" style="display: none;">
+        <div class="modal-content">
+            <h3>生成进度</h3>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-text" id="progress-text">0%</div>
+            </div>
+            <p id="progress-status">正在处理...</p>
+            <button id="cancel-task" class="btn-secondary">取消</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
